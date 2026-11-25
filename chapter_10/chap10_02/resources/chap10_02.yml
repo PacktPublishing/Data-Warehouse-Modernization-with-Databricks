@@ -1,0 +1,45 @@
+resources:
+  pipelines:
+    iot_refinement:
+      name: iot_refinement
+      catalog: main
+      schema: iot
+      serverless: true
+      libraries:
+        - file:
+            path: ../src/iot_refinement.sql
+  jobs:
+    # Periodic: one triggered update every hour, then the pipeline stops
+    iot_hourly:
+      name: iot_hourly
+      trigger:
+        periodic:
+          interval: 1
+          unit: HOURS
+      tasks:
+        - task_key: refresh
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.iot_refinement.id}
+    # Continuous: the job keeps the pipeline running as data arrives
+    iot_continuous:
+      name: iot_continuous
+      continuous:
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: refresh
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.iot_refinement.id}
+    # Event-based: run one update when the bronze table changes
+    iot_on_update:
+      name: iot_on_update
+      trigger:
+        pause_status: UNPAUSED
+        table_update:
+          table_names:
+            - main.iot.bronze_sensor_events
+          condition: ANY_UPDATED
+          wait_after_last_change_seconds: 60
+      tasks:
+        - task_key: refresh
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.iot_refinement.id}

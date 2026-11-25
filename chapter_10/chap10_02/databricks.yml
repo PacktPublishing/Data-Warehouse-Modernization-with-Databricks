@@ -1,0 +1,10 @@
+bundle:
+  name: iot_refinement
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
