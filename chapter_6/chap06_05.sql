@@ -8,14 +8,14 @@ AS SELECT
   t.product_id, 
   t.quantity, 
   t.net_amount, 
-  t.transaction_ts 
+  cast(t.transaction_ts AS TIMESTAMP) AS transaction_ts
 FROM STREAM  retail.bronze.transactions_raw t; 
 
 CREATE OR REPLACE TABLE retail.bronze.edw_sales_history AS 
 SELECT * FROM legacy_edw.integration.sales_history; 
 
 
--- An AUTO CDC target only acepts AUTO CDC Flows: if silver ever 
+-- An AUTO CDC target only accepts AUTO CDC Flows: if silver ever 
 -- becomes one, this backfill fails validation and must be rewritten as  
 -- AUTO CDC ONCE INTO 
 CREATE FLOW edw_history_backfill AS 
