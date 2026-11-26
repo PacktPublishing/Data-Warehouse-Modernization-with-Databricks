@@ -2,7 +2,7 @@
 CREATE TABLE catalog_prod.finance.daily_transactions ( 
   transaction_id    BIGINT       GENERATED ALWAYS AS IDENTITY, 
   account_id        STRING       NOT NULL, 
-  transaction_date  DATE         NOT NULL DEFAULT current_date(), 
+  transaction_date  DATE         NOT NULL, 
   amount            DECIMAL(18,2), 
   currency          STRING, 
   category          STRING 
