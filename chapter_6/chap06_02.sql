@@ -1,5 +1,5 @@
 CREATE OR REFRESH STREAMING TABLE retail.bronze.transactions_raw 
-AS SELECT *, metadata.filepath as source_file 
+AS SELECT *, _metadata.filepath as source_file 
 FROM STREAM read_files( 
   '/Volumes/catalog/schema/landing/transactions', 
   format => 'json', 
